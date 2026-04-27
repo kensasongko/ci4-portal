@@ -141,3 +141,23 @@
 #--------------------------------------------------------------------
 
 # curlrequest.shareOptions = true
+
+#--------------------------------------------------------------------
+# AZURE / ENTRA ID SSO
+#--------------------------------------------------------------------
+# Tenant (Directory) ID from the Entra app registration.
+# azure.tenantId = ''
+# Application (client) ID.
+# azure.clientId = ''
+# Client secret VALUE (not the secret ID). Store in a secret manager in prod.
+# azure.clientSecret = ''
+# Must match the redirect URI registered in Entra exactly (scheme, host, port, path).
+# azure.redirectUri = 'https://your-host/auth/azure/callback'
+# Where to send the user after Microsoft federated logout.
+# azure.postLogoutRedirectUri = 'https://your-host/login'
+# Allow username/password login alongside SSO. Set false for SSO-only.
+# azure.allowLocalLogin = true
+# Reject ID tokens whose `tid` does not match azure.tenantId. Keep true for single-tenant apps.
+# azure.strictTenantCheck = true
+# Auto-create a `user` row on first SSO login. Set false to require pre-provisioning.
+# azure.jitProvisioning = true

@@ -233,8 +233,24 @@
                 }
                 </style>
 
+                <?php
+                    $displayName = $user['name'] ?? '';
+                    $displayUser = $user['username'] ?? ($user['email'] ?? '');
+                    $isAzure     = ($user['source'] ?? null) === 'azure';
+                ?>
+                <div style="text-align:center;margin-top:40px;font-size:1.1rem;color:#333;">
+                    Signed in as
+                    <strong><?= esc($displayName !== '' ? $displayName : $displayUser) ?></strong>
+                    <?php if ($displayName !== '' && $displayUser !== ''): ?>
+                        <span style="color:#888;">(<?= esc($displayUser) ?>)</span>
+                    <?php endif; ?>
+                    <?php if ($isAzure): ?>
+                        <span style="margin-left:8px;padding:2px 8px;border-radius:8px;background:#e8f0fe;color:#1a73e8;font-size:0.85rem;">Microsoft</span>
+                    <?php endif; ?>
+                </div>
+
                 <div class="dashboard-menu">
-                    <a href="<?= base_url('logout') ?>" class="dashboard-card">
+                    <a href="<?= base_url($isAzure ? 'auth/azure/logout' : 'logout') ?>" class="dashboard-card">
                         <i class="ri-logout-line"></i>
                         Logout
                     </a>

@@ -96,6 +96,29 @@
                   </div>
                   <!-- END Header -->
 
+                  <?php $azureConfig = config(\Config\Azure::class); ?>
+                  <?php if (! empty($errors['azure'])): ?>
+                    <div class="row g-0 justify-content-center">
+                      <div class="col-sm-8 col-xl-4">
+                        <div class="alert alert-danger" role="alert"><?= esc($errors['azure']) ?></div>
+                      </div>
+                    </div>
+                  <?php endif; ?>
+
+                  <?php if (! empty($azureConfig->clientId)): ?>
+                  <div class="row g-0 justify-content-center mb-4">
+                    <div class="col-sm-8 col-xl-4">
+                      <a href="<?= site_url('auth/azure') ?>" class="btn btn-lg btn-alt-secondary w-100">
+                        <i class="fab fa-microsoft me-2"></i> Sign in with Microsoft
+                      </a>
+                      <?php if ($azureConfig->allowLocalLogin): ?>
+                        <div class="text-center text-muted my-3 fs-sm">or sign in with username</div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                  <?php endif; ?>
+
+                  <?php if ($azureConfig->allowLocalLogin || empty($azureConfig->clientId)): ?>
                   <!-- Sign In Form -->
                   <!-- jQuery Validation (.js-validation-signin class is initialized in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js) -->
                   <!-- For more info and examples you can check out https://github.com/jzaefferer/jquery-validation -->
@@ -126,6 +149,7 @@
                     </div>
                   </div>
                   <!-- END Sign In Form -->
+                  <?php endif; ?>
                 </div>
               </div>
               <div class="px-4 py-3 w-100 d-lg-none d-flex flex-column flex-sm-row justify-content-between fs-sm text-center text-sm-start">
