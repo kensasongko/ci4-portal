@@ -1,8 +1,10 @@
-# CodeIgniter 4 App with Microsoft Entra ID SSO
+# Wismilak Portal — CodeIgniter 4 App with Microsoft Entra ID SSO
 
-A CodeIgniter 4 application that combines a local username/password login with
-Microsoft Entra ID (Azure AD) single sign-on via OpenID Connect, plus a small
-RESTful user API and JIT user provisioning.
+A CodeIgniter 4 portal application that combines a local username/password login
+with Microsoft Entra ID (Azure AD) single sign-on via OpenID Connect. After
+sign-in users land on a dashboard that launches the applications they have
+access to, with per-app login URLs chosen by authentication source. It also
+ships a small RESTful user API and JIT user provisioning.
 
 ## Tech Stack
 
@@ -13,11 +15,16 @@ RESTful user API and JIT user provisioning.
 
 ## Features
 
-- Local login form (`Account` controller) with CodeIgniter Validation.
+- Local login form (`Account` controller) with CodeIgniter Validation and real
+  credential checks (`Maccount::validateLogin` via `password_verify`).
 - Microsoft Entra ID OIDC sign-in (authorization code flow with `state` and
   `nonce` verification, optional strict tenant check).
 - Federated logout against Microsoft's `oauth2/v2.0/logout` end-session endpoint.
 - JIT user provisioning, plus linking of existing local accounts by username.
+- Portal dashboard listing the active applications a signed-in user can open,
+  each with separate SSO and local login URLs resolved by auth source.
+- Applications management (CRUD) for the catalog: name, description, icon,
+  color, login URLs, active toggle, and sort order.
 - Authenticated home page and login/redirect filters.
 - RESTful `userapi` resource controller (CRUD over the `user` table).
 
@@ -28,11 +35,12 @@ app/
   Config/
     Azure.php          # Tenant/client/redirect/scope settings (env-driven)
     Filters.php        # Aliases: authlogin, redirectlogin
-    Routes.php         # Login, home, /auth/azure/*, userapi resource
+    Routes.php         # Login, home, applications, /auth/azure/*, userapi resource
   Controllers/
     Account.php        # Local login/logout
+    Applications.php   # Applications catalog CRUD + status toggle
     AzureAuth.php      # /auth/azure[/callback|/logout]
-    Home.php           # Authenticated landing page
+    Home.php           # Authenticated dashboard (lists active applications)
     Userapi.php        # RESTful CRUD
   Filters/
     Authlogin.php      # Requires session('user'); redirects to /login
@@ -41,11 +49,14 @@ app/
     AzureAuthService.php  # OAuth state/nonce, token exchange, claims normalization
   Models/
     Maccount.php       # validateLogin, findOrCreateByAzureOid (JIT)
+    Mapplication.php   # Applications table; getActiveApplications()
     Muserapi.php       # Simple model over `user`
   Database/Migrations/
     2026-04-27-000001_AddSsoColumnsToUser.php
+    2026-05-08-000001_CreateApplicationsTable.php
   Views/
-    v_login.php, welcome_message.php
+    v_login.php, welcome_message.php  # login form, dashboard
+    applications/index.php, applications/form.php
 public/                # Web root (point your server here)
 writable/              # Logs, cache, uploads, sessions
 tests/                 # PHPUnit suite scaffolding
@@ -59,7 +70,14 @@ tests/                 # PHPUnit suite scaffolding
 | GET    | `/login`               | `Account::login`         | `redirectlogin` filter             |
 | POST   | `/login`               | `Account::login`         | Local credential login             |
 | GET    | `/logout`              | `Account::logout`        | Destroys session                   |
-| GET    | `/home`                | `Home::index`            | Renders welcome view with session  |
+| GET    | `/home`                | `Home::index`            | Dashboard of active applications    |
+| GET    | `/applications`        | `Applications::index`    | `authlogin`; lists the catalog     |
+| GET    | `/applications/create` | `Applications::create`   | `authlogin`; new-app form          |
+| POST   | `/applications/store`  | `Applications::store`    | `authlogin`; validates and inserts |
+| GET    | `/applications/edit/(:num)`   | `Applications::edit/$1`        | `authlogin`; edit form     |
+| POST   | `/applications/update/(:num)` | `Applications::update/$1`      | `authlogin`; validates/updates |
+| POST   | `/applications/delete/(:num)` | `Applications::delete/$1`      | `authlogin`; deletes a row |
+| POST   | `/applications/toggle/(:num)` | `Applications::toggleStatus/$1`| `authlogin`; flips `is_active` |
 | GET    | `/auth/azure`          | `AzureAuth::start`       | Builds Entra authorize URL         |
 | GET    | `/auth/azure/callback` | `AzureAuth::callback`    | Exchanges code, validates claims   |
 | GET    | `/auth/azure/logout`   | `AzureAuth::logout`      | Federated logout via Microsoft     |
@@ -95,11 +113,16 @@ tests/                 # PHPUnit suite scaffolding
 4. Configure the web server document root to point to the `public/` folder, not
    the project root. `index.php` lives in `public/` for security.
 
-## Database Migration
+## Database Migrations
 
-The SSO migration adds the columns the auth flow expects (`azure_oid`, `email`,
-`name`, `auth_source`, `last_login_at`) and a unique index on `azure_oid`. It
-assumes a pre-existing `user` table (with at least `id`, `username`, `password`).
+- **`AddSsoColumnsToUser`** adds the columns the auth flow expects (`azure_oid`,
+  `email`, `name`, `auth_source`, `last_login_at`) and a unique index on
+  `azure_oid`. It assumes a pre-existing `user` table (with at least `id`,
+  `username`, `password`).
+- **`CreateApplicationsTable`** creates the `applications` catalog table: `name`,
+  `description`, `icon` (Font Awesome class), `color` (Bootstrap color name),
+  `sso_login_url`, `local_login_url`, `is_active`, `sort_order`, and timestamps,
+  with indexes on `sort_order` and `is_active`.
 
 ```bash
 php spark migrate
@@ -153,6 +176,25 @@ php spark migrate:rollback
    back to linking by `username`, and otherwise inserts a new row when JIT is
    on. It also stamps `last_login_at` and refreshes `email`/`name`.
 6. The session is regenerated and the user is sent to `/home`.
+
+## Applications & Dashboard
+
+After login, `/home` renders the portal dashboard listing the active entries
+from the `applications` table (`Mapplication::getActiveApplications`, ordered by
+`sort_order` then `name`). Each application card shows its icon and color and
+links to a login URL.
+
+Manage the catalog under `/applications` (all routes require the `authlogin`
+filter):
+
+- Create, edit, and delete applications, or toggle `is_active` without opening
+  the form.
+- Each application carries two destinations — `sso_login_url` for users
+  authenticated via Entra ID and `local_login_url` for locally authenticated
+  users — so the dashboard can route by auth source.
+- `color` is constrained to a Bootstrap palette (`primary`, `success`, `danger`,
+  `warning`, `info`, `secondary`, `dark`); `icon` holds a Font Awesome class
+  (e.g. `fa-cogs`).
 
 ## Running Tests
 
