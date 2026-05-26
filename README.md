@@ -1,4 +1,4 @@
-# Wismilak Portal — CodeIgniter 4 App with Microsoft Entra ID SSO
+# Portal — CodeIgniter 4 App with Microsoft Entra ID SSO
 
 A CodeIgniter 4 portal application that combines a local username/password login
 with Microsoft Entra ID (Azure AD) single sign-on via OpenID Connect. After
