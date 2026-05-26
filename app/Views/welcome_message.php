@@ -1,290 +1,122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Welcome to CodeIgniter 4!</title>
-    <meta name="description" content="The small framework with powerful features">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
-
-    <!-- STYLES -->
-
-    <style {csp-style-nonce}>
-        * {
-            transition: background-color 300ms ease, color 300ms ease;
-        }
-        *:focus {
-            background-color: rgba(221, 72, 20, .2);
-            outline: none;
-        }
-        html, body {
-            color: rgba(33, 37, 41, 1);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            font-size: 16px;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-        header {
-            background-color: rgba(247, 248, 249, 1);
-            padding: .4rem 0 0;
-        }
-        .menu {
-            padding: .4rem 2rem;
-        }
-        header ul {
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            list-style-type: none;
-            margin: 0;
-            overflow: hidden;
-            padding: 0;
-            text-align: right;
-        }
-        header li {
-            display: inline-block;
-        }
-        header li a {
-            border-radius: 5px;
-            color: rgba(0, 0, 0, .5);
-            display: block;
-            height: 44px;
-            text-decoration: none;
-        }
-        header li.menu-item a {
-            border-radius: 5px;
-            margin: 5px 0;
-            height: 38px;
-            line-height: 36px;
-            padding: .4rem .65rem;
-            text-align: center;
-        }
-        header li.menu-item a:hover,
-        header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .2);
-            color: rgba(221, 72, 20, 1);
-        }
-        header .logo {
-            float: left;
-            height: 44px;
-            padding: .4rem .5rem;
-        }
-        header .menu-toggle {
-            display: none;
-            float: right;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        header .menu-toggle button {
-            background-color: rgba(221, 72, 20, .6);
-            border: none;
-            border-radius: 3px;
-            color: rgba(255, 255, 255, 1);
-            cursor: pointer;
-            font: inherit;
-            font-size: 1.3rem;
-            height: 36px;
-            padding: 0;
-            margin: 11px 0;
-            overflow: visible;
-            width: 40px;
-        }
-        header .menu-toggle button:hover,
-        header .menu-toggle button:focus {
-            background-color: rgba(221, 72, 20, .8);
-            color: rgba(255, 255, 255, .8);
-        }
-        header .heroe {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 1rem 1.75rem 1.75rem 1.75rem;
-        }
-        header .heroe h1 {
-            font-size: 2.5rem;
-            font-weight: 500;
-        }
-        header .heroe h2 {
-            font-size: 1.5rem;
-            font-weight: 300;
-        }
-        section {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 2.5rem 1.75rem 3.5rem 1.75rem;
-        }
-        section h1 {
-            margin-bottom: 2.5rem;
-        }
-        section h2 {
-            font-size: 120%;
-            line-height: 2.5rem;
-            padding-top: 1.5rem;
-        }
-        section pre {
-            background-color: rgba(247, 248, 249, 1);
-            border: 1px solid rgba(242, 242, 242, 1);
-            display: block;
-            font-size: .9rem;
-            margin: 2rem 0;
-            padding: 1rem 1.5rem;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        section code {
-            display: block;
-        }
-        section a {
-            color: rgba(221, 72, 20, 1);
-        }
-        section svg {
-            margin-bottom: -5px;
-            margin-right: 5px;
-            width: 25px;
-        }
-        .further {
-            background-color: rgba(247, 248, 249, 1);
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            border-top: 1px solid rgba(242, 242, 242, 1);
-        }
-        .further h2:first-of-type {
-            padding-top: 0;
-        }
-        footer {
-            background-color: rgba(221, 72, 20, .8);
-            text-align: center;
-        }
-        footer .environment {
-            color: rgba(255, 255, 255, 1);
-            padding: 2rem 1.75rem;
-        }
-        footer .copyrights {
-            background-color: rgba(62, 62, 62, 1);
-            color: rgba(200, 200, 200, 1);
-            padding: .25rem 1.75rem;
-        }
-        @media (max-width: 629px) {
-            header ul {
-                padding: 0;
-            }
-            header .menu-toggle {
-                padding: 0 1rem;
-            }
-            header .menu-item {
-                background-color: rgba(244, 245, 246, 1);
-                border-top: 1px solid rgba(242, 242, 242, 1);
-                margin: 0 15px;
-                width: calc(100% - 30px);
-            }
-            header .menu-toggle {
-                display: block;
-            }
-            header .hidden {
-                display: none;
-            }
-            header li.menu-item a {
-                background-color: rgba(221, 72, 20, .1);
-            }
-            header li.menu-item a:hover,
-            header li.menu-item a:focus {
-                background-color: rgba(221, 72, 20, .7);
-                color: rgba(255, 255, 255, .8);
-            }
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Portal</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" href="<?= base_url('assets/media/favicons/favicon.png') ?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?= base_url('assets/media/favicons/favicon-192x192.png') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/media/favicons/apple-touch-icon-180x180.png') ?>">
+    <link rel="stylesheet" id="css-main" href="<?= base_url('assets/css/oneui.min.css') ?>">
 </head>
 <body>
-<style>
-.dashboard-menu {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 32px;
-                    justify-content: center;
-                    margin-top: 60px;
-                }
-                .dashboard-card {
-                    background: #fff;
-                    border-radius: 16px;
-                    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-                    width: 240px;
-                    height: 160px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    font-size: 1.2rem;
-                    font-weight: 500;
-                    color: #333;
-                    cursor: pointer;
-                    transition: box-shadow 0.2s, transform 0.2s;
-                    border: 2px solid #f0f0f0;
-                }
-                .dashboard-card:hover {
-                    box-shadow: 0 4px 24px rgba(0,0,0,0.16);
-                    transform: translateY(-4px) scale(1.03);
-                    border-color: #007bff;
-                    color: #007bff;
-                }
-                .dashboard-card i {
-                    font-size: 2.5rem;
-                    margin-bottom: 18px;
-                    color: #007bff;
-                }
-                </style>
+<?php
+    $displayName = $user['name'] ?? '';
+    $displayUser = $user['username'] ?? ($user['email'] ?? '');
+    $isAzure     = ($user['source'] ?? null) === 'azure';
+    $logoutUrl   = base_url($isAzure ? 'auth/azure/logout' : 'logout');
+?>
+<div id="page-container">
 
-                <?php
-                    $displayName = $user['name'] ?? '';
-                    $displayUser = $user['username'] ?? ($user['email'] ?? '');
-                    $isAzure     = ($user['source'] ?? null) === 'azure';
-                ?>
-                <div style="text-align:center;margin-top:40px;font-size:1.1rem;color:#333;">
-                    Signed in as
-                    <strong><?= esc($displayName !== '' ? $displayName : $displayUser) ?></strong>
-                    <?php if ($displayName !== '' && $displayUser !== ''): ?>
-                        <span style="color:#888;">(<?= esc($displayUser) ?>)</span>
-                    <?php endif; ?>
+    <!-- Header -->
+    <header id="page-header">
+        <div class="content-header">
+            <div class="d-flex align-items-center">
+                <span class="fw-semibold fs-4">Portal</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa fa-user-circle fa-lg text-muted"></i>
+                    <div class="lh-sm">
+                        <div class="fw-semibold fs-sm">
+                            <?= esc($displayName !== '' ? $displayName : $displayUser) ?>
+                        </div>
+                        <?php if ($displayName !== '' && $displayUser !== ''): ?>
+                        <div class="text-muted fs-xs"><?= esc($displayUser) ?></div>
+                        <?php endif; ?>
+                    </div>
                     <?php if ($isAzure): ?>
-                        <span style="margin-left:8px;padding:2px 8px;border-radius:8px;background:#e8f0fe;color:#1a73e8;font-size:0.85rem;">Microsoft</span>
+                    <span class="badge bg-primary-light text-primary ms-1">
+                        <i class="fab fa-microsoft me-1"></i>Microsoft
+                    </span>
                     <?php endif; ?>
                 </div>
+                <a href="<?= base_url('applications') ?>" class="btn btn-sm btn-alt-secondary">
+                    <i class="fa fa-cogs me-1"></i> Manage Apps
+                </a>
+                <a href="<?= $logoutUrl ?>" class="btn btn-sm btn-alt-secondary">
+                    <i class="fa fa-sign-out-alt me-1"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- END Header -->
 
-                <div class="dashboard-menu">
-                    <a href="<?= base_url($isAzure ? 'auth/azure/logout' : 'logout') ?>" class="dashboard-card">
-                        <i class="ri-logout-line"></i>
-                        Logout
-                    </a>
+    <!-- Main Container -->
+    <main id="main-container">
+        <div class="content content-full">
+
+            <div class="py-4 text-center">
+                <h2 class="fw-bold mb-1">Applications</h2>
+                <p class="text-muted">Select an application to continue</p>
+            </div>
+
+            <?php if (empty($applications)): ?>
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle me-2"></i>
+                        No applications available yet.
+                    </div>
                 </div>
+            </div>
+            <?php else: ?>
+            <div class="row g-4 justify-content-center">
+                <?php foreach ($applications as $app):
+                    $targetUrl = $isAzure
+                        ? ($app['sso_login_url'] ?? '')
+                        : ($app['local_login_url'] ?? '');
+                    $color     = esc($app['color'] ?? 'primary');
+                    $icon      = esc($app['icon'] ?? 'fa-th-large');
+                ?>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <?php if ($targetUrl !== ''): ?>
+                    <a href="<?= esc($targetUrl) ?>" target="_blank" rel="noopener noreferrer" class="block block-link-shadow block-rounded text-center p-4 text-decoration-none">
+                    <?php else: ?>
+                    <div class="block block-rounded text-center p-4" title="No URL configured for this application">
+                    <?php endif; ?>
+                        <div class="mb-3">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-<?= $color ?>-light" style="width:64px;height:64px;">
+                                <i class="fa <?= $icon ?> fa-2x text-<?= $color ?>"></i>
+                            </span>
+                        </div>
+                        <div class="fw-semibold"><?= esc($app['name']) ?></div>
+                        <?php if (!empty($app['description'])): ?>
+                        <div class="fs-sm text-muted mt-1"><?= esc($app['description']) ?></div>
+                        <?php endif; ?>
+                        <?php if ($targetUrl === ''): ?>
+                        <div class="fs-xs text-danger mt-2">
+                            <i class="fa fa-exclamation-circle me-1"></i>Not configured
+                        </div>
+                        <?php endif; ?>
+                    <?php if ($targetUrl !== ''): ?>
+                    </a>
+                    <?php else: ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
 
-<footer>
-    <div class="environment">
+        </div>
+    </main>
+    <!-- END Main Container -->
 
-       
+</div>
+<!-- END Page Container -->
 
-    </div>
-
-    <div class="copyrights">
-
-        <p>&copy; <?= date('Y') ?> CodeIgniter Foundation. CodeIgniter is open source project released under the MIT
-            open source licence.</p>
-
-    </div>
-
-</footer>
-
-<!-- SCRIPTS -->
-
-<script>
-    function toggleMenu() {
-        var menuItems = document.getElementsByClassName('menu-item');
-        for (var i = 0; i < menuItems.length; i++) {
-            var menuItem = menuItems[i];
-            menuItem.classList.toggle("hidden");
-        }
-    }
-</script>
-
-<!-- -->
-
+<script src="<?= base_url('assets/js/oneui.app.min.js') ?>"></script>
 </body>
 </html>

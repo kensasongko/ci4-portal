@@ -31,16 +31,14 @@ class Account extends BaseController
             	$data['errors'] = $this->validation->getErrors();
                 return view('v_login', $data);
             } else {
-                //check db
-                // $res = $this->Maccount->validateLogin($datapost);
+                $res = $this->Maccount->validateLogin($datapost);
 
-                // if ($res["status"]) {
-                	return redirect()->route('home');
-                // } else {
-                // 	$data['errors'] = $res;
-                // 	return view('v_login', $data);
-                // }
-                
+                if ($res["status"]) {
+                    return redirect()->route('home');
+                } else {
+                    $data['errors'] = $res;
+                    return view('v_login', $data);
+                }
             }
 
         }

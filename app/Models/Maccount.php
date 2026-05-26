@@ -12,7 +12,6 @@ class Maccount extends Model {
 	function validateLogin($data) {
 		$builder = $this->db->table('user');
 
-		$builder->select("username, password");
 		$builder->where("username", $data["login-username"]);
 		$row = $builder->get();
 
@@ -24,11 +23,10 @@ class Maccount extends Model {
 
 			if (password_verify($data["login-password"], $user->password)) {
 				unset($user->password);
-				$xuser = $row->getResultArray();
 
 				$userData = [
-					'user' => $xuser[0],
-					'logged_in' => TRUE
+					'user' => (array) $user,
+					'logged_in' => TRUE,
 				];
 
 				$this->session->set($userData);
